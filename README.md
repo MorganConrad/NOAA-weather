@@ -1,4 +1,33 @@
 NOAA-weather
 ============
 
-Java / Android code for dealing with data collected from NOAA's REST API
+Java / Android code for collecting, parsing, and organizing weather data collected from [NOAA](http://www.noaa.gov/), 
+specifically, the [NOAA REST API](http://graphical.weather.gov/xml/rest.php)
+
+Usage
+=====
+
+This code is _not ready for prime time_.  When it is this section will be updated.
+
+
+Developed By
+============
+
+* Morgan Conrad - <flyingspaniel@gmail.com>
+
+License
+=======
+
+    Copyright 2013 Morgan Conrad
+
+    Licensed under the LGPL (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.gnu.org/copyleft/lesser.html
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.

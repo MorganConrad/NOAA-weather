@@ -1,7 +1,6 @@
 package com.flyingspaniel.net.weather;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -18,8 +17,8 @@ import com.flyingspaniel.xml.UsesXPath;
  * @author Morgan Conrad
  * @since Copyright(c) 2013  Morgan Conrad 
  *
- * @see <a href="http://www.gnu.org/copyleft/lesser.html">This software is released under the LGPL</a>
- * @see <a href="http://graphical.weather.gov/xml/rest.php">National Digital Forecast Database (NDFD) REST Web Service
+ * @see <a href="http://www.gnu.org/copyleft/lesser.html">This software is released under the LGPL</a><p>
+ * @see <a href="http://graphical.weather.gov/xml/rest.php">National Digital Forecast Database (NDFD) REST Web Service</a><p>
  *
  * An example of the XML for a single TimeLayout follows:
  *<pre>
@@ -33,10 +32,7 @@ import com.flyingspaniel.xml.UsesXPath;
 public class TimeLayout {
 
    static final UsesXPath xPath = new UsesXPath();
-   
-   // the Date / Time format used by NDFD
-   //static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-   
+      
    // the name of this time layout, e.g. "k-p24h-n7-1"
    public final String layoutKey;
    
@@ -48,8 +44,7 @@ public class TimeLayout {
 
    
    /**
-    * Constructor
-    * Generally, one would use parseXML instead
+    * Constructor - generally, one would use parseXML instead
     * 
     * @param layoutKey  non-null
     */
@@ -62,7 +57,7 @@ public class TimeLayout {
    
    
    /**
-    * Utility to find the index (within this.intervals) to desiredTime
+    * Utility to find the index (within this.intervals) closest to desiredTime
     * @param desiredTime
     * @param maxHourDiff
     * @return  -1 if none found
@@ -74,8 +69,8 @@ public class TimeLayout {
    
    /**
     * Parses an XML Node representing the TimeLayout
-    * @param timeLayout
-    * @return TimeLayout
+    * @param  timeLayout  XML Node
+    * @return TimeLayout  never null
     * @throws XPathExpressionException
     * @throws ParseException
     */
@@ -98,40 +93,11 @@ public class TimeLayout {
       return result;
    }
    
-   
-//   /**
-//    * Parse an RFC 3339 timestamp
-//    * 
-//    * @param  dateString
-//    * @return Date
-//    * @throws ParseException
-//    * @see <a href="http://www.ietf.org/rfc/rfc3339.txt">IETF RFC Document
-//    */
-//   public static synchronized Date parseRFC3339(String dateString) throws ParseException {
-//      int len = dateString.length();
-//      if (':' == dateString.charAt(len-3))
-//         dateString = dateString.substring(0, len-3) + dateString.substring(len-2);
-//      return DATE_TIME_FORMAT.parse(dateString);
-//   }
-//
-//   
-//   /**
-//    * Generate an RFC 3339 timestamp
-//    * 
-//    * @param  inDate
-//    * @return String representation
-//    * @throws ParseException
-//    * @see <a href="http://www.ietf.org/rfc/rfc3339.txt">IETF RFC Document
-//    */
-//   public static synchronized String formatRFC3339(Date inDate) throws ParseException {
-//      String withoutColon = DATE_TIME_FORMAT.format(inDate);
-//      int len = withoutColon.length();
-//      return withoutColon.substring(0, len-2) + ":" + withoutColon.substring(len-2);
-//   }
-//
-   
 
-   
+
+   /*
+    * Use the unique (within a forecast) layoutKey
+    */
    @Override
    public boolean equals(Object obj) {
       if (this == obj)
@@ -144,6 +110,9 @@ public class TimeLayout {
       return false;
    }
 
+   /*
+    * Use the unique (within a forecast) layoutKey
+    */
    @Override
    public int hashCode() {
       return layoutKey.hashCode();

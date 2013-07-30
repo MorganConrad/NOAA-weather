@@ -2,28 +2,13 @@ package com.flyingspaniel.net.weather;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
-
 
 import junit.framework.TestCase;
 
 public class NOAAWeatherTest extends TestCase {
 
-//   public void testFoo() throws ParseException {
-//      TimeZone tz = TimeZone.getTimeZone("GMT-05:00");
-//      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SZ");  
-//      Date fff = sdf.parse("2012-12-23T07:00:00-05:00");
-//      Date d1 =  NOAAWeather.parseRFC3339("2012-12-23T07:00:00-05:00");
-//      Date d2 = NOAAWeather.parseRFC3339("2012-12-23T07:00:00-04:00");
-//      
-//      System.out.println(fff + "    " + d1 + "   " + d2);
-//   }
-   
-   
    
    public void testFile() throws IOException {
       NOAAWeather weather = new NOAAWeather();

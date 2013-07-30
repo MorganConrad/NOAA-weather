@@ -4,11 +4,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.xpath.XPathExpressionException;
-
-
 /**
- * Represents a time-series of NDFD measurements, which are linked to a TimeLayout  
+ * Represents a time-series of {@link NDFD} measurements, which are linked to a {@link TimeLayout}  
  * 
  * @author Morgan Conrad
  * @since Copyright(c) 2013  Morgan Conrad
@@ -25,7 +22,13 @@ public class NDFDSeries {
    
    protected final List<String> values; 
    
-  
+  /**
+   * Constructor.
+   * @param ndfd
+   * @param timeLayout
+   * @param units    units of the measurement, such as Fahrenheit, inches, knots
+   * @param values   a "safe" copy will be made.
+   */
    public NDFDSeries(NDFD ndfd, TimeLayout timeLayout, String units, List<String> values) {
       this.ndfd = ndfd;
       this.timeLayout = timeLayout;
@@ -44,46 +47,39 @@ public class NDFDSeries {
    
    
    /**
-    * Parse an XML node (usually obtained via ndfd.xPathToNode)
-    * @param noaa
-    * @param node   non-null
-    * @throws XPathExpressionException
+    * The associated TimeLayout
     */
-//   public static NDFDSeries parseNode(NDFD ndfd, NOAAWeather noaa, Node mainNode) throws XPathExpressionException {      
-//      String timeLayoutName = UsesXPath.getAttribute(mainNode, NOAAWeather.TIME_LAYOUT);
-//      String units = UsesXPath.getAttribute(mainNode, "units");
-//      
-//      NodeList nodeList = noaa.getNodeListFromXPath(mainNode, ndfd.listTag);
-//      List<String> values = ndfd.parseValues(nodeList);
-//      NDFDSeries ndfdSeries = new NDFDSeries(ndfd, noaa.timeLayoutMap.get(timeLayoutName), units, values);
-//     
-//      return ndfdSeries;
-//   }
-//   
-
-
-   /*
-    * Basic accessors
-    */
-   
    public TimeLayout getTimeLayout() {
       return timeLayout;
    }
    
+   /**
+    * The units of the measurement, such as Fahrenheit, inches, knots
+    * @return "?" if none were specified
+    */
    public String getUnits() {
       return units;
    }
    
+   /**
+    * Size of the series
+    */
    public int size() {
       return values.size();
    }
    
 
+   /**
+    * Get a specific value
+    * @param idx
+    */
    public String getValue(int idx) {
       return values.get(idx);
    }
    
-   
+   /**
+    * Get the (unmodifiable) list of the values
+    */
    public List<String> getValues() {
       return values;
    }
@@ -94,7 +90,7 @@ public class NDFDSeries {
     * 
     * @param desiredTime
     * @param maxHourDiff
-    * @return  a String, or null if no value is within maxHourrDiff
+    * @return  a String, or null if no value is within maxHourDiff
     */
    public String getValueClosestTo(Date desiredTime, double maxHourDiff) {
       int idxInTimeLayout = timeLayout.findClosestTimeIndex(desiredTime, maxHourDiff);

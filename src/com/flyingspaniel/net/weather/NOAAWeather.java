@@ -30,15 +30,17 @@ import com.flyingspaniel.xml.UsesXPath;
  * Implementation of IWeather using the NOAA National Weather Service
  * 
  * @author Morgan Conrad
- * @since Copyright(c) 2012  Morgan Conrad
+ * @since Copyright(c) 2013  Morgan Conrad
  *
- * @see <a href="http://www.gnu.org/copyleft/lesser.html">This software is released under the LGPL</a>
+ * @see <a href="http://www.gnu.org/copyleft/lesser.html">This software is released under the LGPL</a><p>
  * @see <a href="http://graphical.weather.gov/xml/rest.php">NOAA REST Web Service</a>
  *
  */
 public class NOAAWeather extends UsesXPath implements Weather.Interface<Double[]> {
 
-   
+   /**
+    * Keys for the moreInfo map.
+    */
    public enum MoreInfoKeys {
       DATE, 
       IN_URL,   // URL we send to NOAA 
@@ -49,7 +51,6 @@ public class NOAAWeather extends UsesXPath implements Weather.Interface<Double[]
    public static final String BASE_URL = "http://graphical.weather.gov/xml/sample_products/browser_interface/ndfdXMLclient.php";
    
    static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");  
-//   static final SimpleDateFormat DATE_ONLY_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'");  
    
   // NDFDs that are always done
    static final EnumSet<NDFD> STANDARD_NDFDS = EnumSet.of(NDFD.maxt, NDFD.mint, NDFD.temp, NDFD.icons);
@@ -140,6 +141,15 @@ public class NOAAWeather extends UsesXPath implements Weather.Interface<Double[]
    }
    
    @Override
+   public void setDates(Date startDate, long days) {
+      if (startDate == null)
+         startDate = new Date();
+      this.startDate = startDate;
+      long ms = startDate.getTime() + (days * 24 * TimeInterval.HOURL);
+      this.endDate = new Date(ms);
+   }
+   
+   @Override
    public void setLocation(Double...latLong) {
       latitude = latLong[0];
       longitude = latLong[1];
@@ -191,6 +201,12 @@ public class NOAAWeather extends UsesXPath implements Weather.Interface<Double[]
    }
    
   
+   /**
+    * Loads the doc from a previously stored file.  (generally for unit tests)
+    * @param file
+    * @return XML Document
+    * @throws IOException
+    */
    protected Document loadDocFromFile(File file) throws IOException {
       try {
          return loadDOM(file);
@@ -202,6 +218,11 @@ public class NOAAWeather extends UsesXPath implements Weather.Interface<Double[]
    }
    
    
+   /**
+    * Loads the XML Document from the NOAA REST service
+    * @return XML Document
+    * @throws IOException
+    */
    protected Document loadDocFromNOAA() throws IOException {
       String begin;
       String end;
@@ -241,9 +262,9 @@ public class NOAAWeather extends UsesXPath implements Weather.Interface<Double[]
       if (date == null)
          date = new Date();
       TimeInterval now = new TimeInterval(date);
+      @SuppressWarnings("unchecked")
       List<Forecast> shouldBeOnlyOne = RangesPredicates.listAcceptsExemplar((Collection)forecasts, now, RangesPredicates.Contains);
-      //List<Forecast> shouldBeOnlyOne = now.intervalsContaining(forecasts, false, true);
-      
+       
       if (shouldBeOnlyOne.size() == 1)
          return shouldBeOnlyOne.get(0);
       
@@ -429,7 +450,7 @@ public class NOAAWeather extends UsesXPath implements Weather.Interface<Double[]
     * 
     * @param date if null current date will be used
     * @param hour
-    * @return
+    * @return Date
     */
    public Date getDateAtHour(Date date, int hour) {
       calendar.setTime(date != null ? date : new Date());
@@ -438,24 +459,7 @@ public class NOAAWeather extends UsesXPath implements Weather.Interface<Double[]
    }
    
 
-//   protected void xxxparse1TimeLayout(Node timeLayout) throws XPathExpressionException, ParseException {
-//      String key = getStringFromXPath(timeLayout, "layout-key");
-//      NodeList allStartTimes = getNodeListFromXPath(timeLayout, "start-valid-time" );
-//      ArrayList<Date> dates = new ArrayList<Date>();
-//      for (int n=0; n<allStartTimes.getLength(); n++) {
-//         String dateS = allStartTimes.item(n).getTextContent();
-//         if (calendar == null) {
-//            int len = dateS.length();
-//            TimeZone timeZone = TimeZone.getTimeZone("GMT" + dateS.substring(len-6, len));
-//            calendar = new GregorianCalendar(timeZone);
-//         }
-//         dates.add(parseRFC3339(dateS));
-//      }
-//      
-//      layoutKeys.add(key);
-//      timeLayoutMap.put(key, dates);
-//   }
-//      
+
    
    protected List<Forecast> computeDailyForecasts() throws XPathExpressionException, ParseException {      
       List<TimeInterval> dailyDates = timeLayout0.intervals;
@@ -500,28 +504,7 @@ public class NOAAWeather extends UsesXPath implements Weather.Interface<Double[]
      else
         return new NDFDSeries(ndfd);
    }
-   
-   
-//   protected void addIconsAndInterpretations() throws XPathExpressionException {
-//      
-//      Node node = getNodeFromXPath(mainNode, NDFD.icons.xPathToNode);
-//      String timeLayout = getAttribute(node, TIME_LAYOUT);
-//      List<Date> availableTimes = timeLayoutMap.get(timeLayout);
-//      NodeList nodeList = getNodeListFromXPath(node, NDFD.icons.listTag);
-//      int idx = 0;
-//      
-//     for (Forecast forecast : forecasts) {
-//         Date preferredTimePerDay = forecastPreferredDates.get(idx++);
-//         int timeIndex = findClosestTime(availableTimes, preferredTimePerDay, maxHourDiff);
-//         if (timeIndex >= 0) {
-//            String iconName = nodeList.item(timeIndex).getTextContent();
-//            forecast.setConditionIconPath(iconName);
-//            forecast.setCondition(interpretIconName(iconName));
-//         }
-//      }
-//  
-//   }
-   
+     
    
    
    
@@ -567,60 +550,6 @@ public class NOAAWeather extends UsesXPath implements Weather.Interface<Double[]
    }
 
    
-//  
-//   protected void addNDFDInfo(NDFD ndfd, List<Forecast> forecasts) throws XPathExpressionException {
-//      
-//      Node node = getNodeFromXPath(mainNode, ndfd.xPathToNode);
-//      String timeLayout = getAttribute(node, TIME_LAYOUT);
-//      List<Date> availableTimes = timeLayoutMap.get(timeLayout);
-//      
-//      NodeList nodeList = getNodeListFromXPath(node, ndfd.listTag);
-//      int idx = 0;
-//      
-//      for (Forecast forecast : forecasts) {
-//         Date preferredTimePerDay = forecastPreferredDates.get(idx++);
-//         int timeIndex = findClosestTime(availableTimes, preferredTimePerDay, maxHourDiff);
-//         if (timeIndex >= 0) {
-//            String content = nodeList.item(timeIndex).getTextContent();
-//            forecast.putMoreInfo(ndfd.nameForUI, content);
-//         }
-//      }
-//   }
-   
-   
-//   protected NDFDSeries computeWWASeries() throws XPathExpressionException {
-//      Node wwaNode = getNodeFromXPath(mainNode, NDFD.wwa.xPathToNode);      
-//      NDFDSeries series = new NDFDSeries(NDFD.wwa);
-//      series.timeLayout = timeLayoutMap.get(getAttribute(wwaNode, TIME_LAYOUT));
-// 
-//      NodeList hazardConditions = getNodeListFromXPath(wwaNode, NDFD.wwa.listTag);
-//   
-//      for (int n=0; n<hazardConditions.getLength(); n++) {
-//         NodeList hazards = getNodeListFromXPath(hazardConditions.item(n), "hazard ");
-//         
-//      // note that hazards will often have a length of 0
-//         if (hazards.getLength() == 0)
-//            series.values.add("");
-//         
-//         else for (int hn= 0; hn < hazards.getLength(); hn++) {
-//            Node hazard = hazards.item(hn);
-//            StringBuilder sb = new StringBuilder();
-//            sb.append(getAttribute(hazard, "phenomena"));
-//            sb.append(" " + getAttribute(hazard, "significance"));
-//            Node url = getNodeFromXPath(hazard, "hazardTextURL");
-//            sb.append(" @link:" + url.getTextContent());
-//            series.values.add(sb.toString());
-//         }
-//      }
-//      
-//      return series;
-//   }
-//   
-   
-//   
-//   public static float nodeToFloat(Node node) {
-//      return Float.parseFloat(node.getTextContent());
-//   }
    
    
    /**
@@ -629,7 +558,7 @@ public class NOAAWeather extends UsesXPath implements Weather.Interface<Double[]
     * @param  dateString
     * @return Date
     * @throws ParseException
-    * @see <a href="http://www.ietf.org/rfc/rfc3339.txt">IETF RFC Document
+    * @see <a href="http://www.ietf.org/rfc/rfc3339.txt">IETF RFC Document</a>
     */
    public static synchronized Date parseRFC3339(String dateString) throws ParseException {
       int len = dateString.length();
@@ -643,7 +572,7 @@ public class NOAAWeather extends UsesXPath implements Weather.Interface<Double[]
     * @param  inDate
     * @return String representation
     * @throws ParseException
-    * @see <a href="http://www.ietf.org/rfc/rfc3339.txt">IETF RFC Document
+    * @see <a href="http://www.ietf.org/rfc/rfc3339.txt">IETF RFC Document</a>
     */
    public static synchronized String formatRFC3339(Date inDate) throws ParseException {
       String withoutColon = DATE_TIME_FORMAT.format(inDate);
@@ -665,5 +594,15 @@ public class NOAAWeather extends UsesXPath implements Weather.Interface<Double[]
    }
    
    
-
+   
+   /**
+    * Retrieve all conditions for a specific measurement (e.g. max temp) through the forecast
+    * @param ndfd
+    * @return  null if that measurement was not requested.
+    */
+   public NDFDSeries getNDFDSeries(NDFD ndfd) {
+      return ndfdSeriesMap.get(ndfd);
+   }
+   
+   
 }

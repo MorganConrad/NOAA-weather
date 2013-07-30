@@ -41,7 +41,7 @@ public class Weather {
     * Parses a String to a float, return Float.NaN for various error conditions
     * 
     * @param s
-    * @return
+    * @return float
     */
    public static float parseFloat(String s) {
       if ((s == null) || s.length() == 0)
@@ -71,6 +71,16 @@ public class Weather {
       
       
       /**
+       * Sets the start date for which we are interested
+       * endDate will be calculated at days later
+       * @param startDate
+       * @param days
+       */
+      public void setDates(Date startDate, long days);
+      
+      
+      
+      /**
        * Sets the location for the forecast.
        * @param l
        */
@@ -90,7 +100,7 @@ public class Weather {
       
       /**
        * Catch-all for any extra information that does not fit nicely in a Forecast
-       * @return
+       * @return non-null Map (may be empty)
        */
       public Map<String, String> getMoreInfo();
       

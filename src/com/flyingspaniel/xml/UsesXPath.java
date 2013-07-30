@@ -20,14 +20,14 @@ import org.xml.sax.SAXException;
 /**
  * Base class for classes that use XPath to navigate a DOM
  * 
- * Contains useful utilities for XPath navigation, plus utilities for loading DOMs. 
+ * Contains useful utilities for XPath navigation, plus utilities for loading DOMs.<P> 
  * 
  * The base class, UsesXPath, shares a single static DocumentBuilderFactory and XPathFactory
  * for all instances.  Since neither DocumentBuilderFactory nor XPathFactory are thread safe,
- * their calls, @link #loadDOM(File), @link {@link #loadDOM(String)} and @link {@link #compile(String)}, 
- * are explicitly synchronized
+ * their calls, {@link #loadDOM(File)}, {@link #loadDOM(String)} and {@link #compile(String)}, 
+ * are explicitly synchronized.<p>
  * 
- * If you are using this class on a high-load application, use UsesXPath.HighLoad instead,
+ * If you are using this class on a high-load application, use {@link UsesXPath.HighLoad} instead,
  * because in that class each instance has it's own factory.
  * 
  * @author Morgan Conrad
@@ -57,7 +57,7 @@ public class UsesXPath {
    
    
    /**
-    * If you just want a shared instance (you don't want to extend) use this
+    * If you just want a shared instance (you don't want to extend this class) use this
     * @return UsesXPath
     */
    public static synchronized UsesXPath getInstance() {
@@ -82,9 +82,9 @@ public class UsesXPath {
    
    /**
     * Return the attribute of a Node
-    * @param node
-    * @param name
-    * @return null if not an attribute
+    * @param node  the non-null Node
+    * @param name  the attribute name
+    * @return null if name is not an attribute
     */
    public static String getAttribute(Node node, String name) {
       Node attrNode = node.getAttributes().getNamedItem(name);
@@ -151,9 +151,8 @@ public class UsesXPath {
    
    /**
     * Obtain a DocumentBuilderFactory
-    * This (default) implementation synchronized access to a single static instance
+    * This (default) implementation uses synchronized access to a single static instance
     * 
-    * @see HighLoad  for alternative implementation, one factory per instance
     * @return DocumentBuilderFactory
     */
    public DocumentBuilderFactory getDocumentBuilderFactory() {
@@ -163,10 +162,10 @@ public class UsesXPath {
    
    /**
     * Loads a DOM from a URL
-    * This (default) implementation synchronized access to a single static instance
+    * This (default) implementation uses synchronized access to a single static instance
     * 
     * @param url
-    * @return Document
+    * @return XML Document
     * @throws SAXException
     * @throws IOException
     * @throws ParserConfigurationException
@@ -186,7 +185,7 @@ public class UsesXPath {
     * This (default) implementation synchronized access to a single static instance
     * 
     * @param file
-    * @return Document
+    * @return XML Document
     * @throws SAXException
     * @throws IOException
     * @throws ParserConfigurationException

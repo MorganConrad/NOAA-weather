@@ -2,6 +2,7 @@ package com.flyingspaniel.net.weather;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.xpath.XPathExpressionException;
@@ -18,8 +19,8 @@ import com.flyingspaniel.xml.UsesXPath;
  * @author Morgan Conrad
  * @since Copyright(c) 2013  Morgan Conrad
  *
- * @see <a href="http://www.gnu.org/copyleft/lesser.html">This software is released under the LGPL</a>
- * @link http://graphical.weather.gov/xml/docs/elementInputNames.php
+ * @see <a href="http://www.gnu.org/copyleft/lesser.html">This software is released under the LGPL</a><p>
+ * @see <a href="http://graphical.weather.gov/xml/docs/elementInputNames.php">Full list of National Digital Forecast Database Element Names</a>
  *
  */
 public enum NDFD {
@@ -44,6 +45,13 @@ public enum NDFD {
    
    static final EnumSet<NDFD> STRING_NDFDS = EnumSet.of(NDFD.icons, NDFD.interpretation, NDFD.sky, NDFD.wwa, NDFD.wx);
    
+   static final HashMap<String, NDFD> sNDFDsByUIName = new HashMap<String, NDFD>();
+   
+   static {
+      for (NDFD ndfd : NDFD.values())
+         sNDFDsByUIName.put(ndfd.nameForUI, ndfd);
+   }
+   
    public final String nameForUI;
    public final String xPathToNode;    // relative to the main node, "dwml/data"  usually starts with "parameters/"
    public final String listTag;        // usually "value"
@@ -60,8 +68,36 @@ public enum NDFD {
    
 
    /**
+    * Like valueOf, but pass in the more UI friendly name
+    * @param nameForUI  e.g. "Wind Speed"
+    * @return  null of no NDFD matches that nameForUI
+    */
+   public static NDFD valueOfUIName(String nameForUI) {
+      return sNDFDsByUIName.get(nameForUI);
+   }
+   
+   
+   /**
+    * Obtain an NDFD, trying both valueOfUIName and valueOf
+    * @param uiNameOrEnumName
+    * @return  null if no NDFD matches
+    */
+   public static NDFD lookup(String uiNameOrEnumName) {
+      NDFD ndfd = valueOfUIName(uiNameOrEnumName);
+      if (ndfd == null)
+         try {
+            ndfd = NDFD.valueOf(uiNameOrEnumName);
+         }
+         catch (IllegalArgumentException iae) {
+            ndfd = null;
+         }
+      
+      return ndfd;
+   }
+   
+   
+   /**
     * Whether this measurement is numeric (could be converted to a Float)
-    * @return
     */
    public boolean isNumeric() {
       return !STRING_NDFDS.contains(this);
@@ -87,9 +123,9 @@ public enum NDFD {
    
    
    /**
-    * Standard implementation to parse a single value, but some enums (e.g. NDFD.wwa) override this
+    * Standard implementation to parse a single value
     * @param valueNode
-    * @return
+    * @return String
     */
    protected String parseValue(Node valueNode) {
       return valueNode.getTextContent();

@@ -7,9 +7,33 @@ specifically, the [NOAA REST API](http://graphical.weather.gov/xml/rest.php)
 Usage
 =====
 
-This code is _not ready for prime time_.  When it is this section will be updated.
+[JavaDocs are here](http://morganconrad.github.com/NOAA-weather/javadoc/)
 
+Getting and parsing the data
+----------------------------
 
+1. Create a NOAAWeather
+		<NOAAWeather weather = new NOAAWeather()>
+2. Set the dates of interest using one form of setDates
+		<weather.setDates(new Date(), 10);      // next 10 days>
+3. Set the location
+		<weather.setLocation(39.096, -94.595);  // Kansas City here I come >
+4. By default, this will obtain data for min and maximum temperature, temperature, and general conditions.
+   If you want more, e.g. wind direction and wind gusts, call addNDFDParameters.
+		<weather.addNDFDParameters("wdir", "wgust");
+5. You are ready to call().  This may take a few seconds so you might want to use an Executor etc.
+		<weather.call();>
+
+Using the results
+-----------------
+
+1. There is some "metadata" in a Map<String, String>.  Current keys are enumerated in <NOAAWeather.MoreInfoKeys>
+		<String theirURL = weather.getMoreInfo().get(NOAAWeather.MoreInfoKeys.OUT_URL.name());>
+2. You can obtain all data for the time period, for a certain measurement, as an NDFDSeries
+		<NDFDSeries allMaxTs = weather.getNDFDSeries(NDFD.maxt);>
+3. More to come...
+		
+		
 Developed By
 ============
 

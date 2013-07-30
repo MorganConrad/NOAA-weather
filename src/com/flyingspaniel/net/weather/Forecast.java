@@ -124,7 +124,6 @@ public class Forecast extends TimeInterval {
 
    /**
     * Get the general condition (e.g. "Showers")
-    * @return
     */
    public String getInterpretation() {
       return iconInterpretation;
@@ -201,7 +200,7 @@ public class Forecast extends TimeInterval {
    
    /**
     * Return the Map of moreInfo, creating it if necessary
-    * @return
+    * @return Map, non-null
     */
    public synchronized Map<String, Object> getMoreInfo() {
       if (moreInfo == null)

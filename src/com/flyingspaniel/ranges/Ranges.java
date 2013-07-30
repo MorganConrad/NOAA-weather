@@ -12,10 +12,13 @@ package com.flyingspaniel.ranges;
  */
 public class Ranges {
 
+   // not to be instantiated
+   private Ranges() {}
+   
    /**
-    * Similar to @link java.util.Comparable.  
-    * Implement this interface if the range itself can do the comparison.
-    * The result returned should be one of the Ranges.Comparison constants below
+    * Similar to java.util{@link java.util.Comparable}.  
+    * Implement this interface if the <i>range itself</i> can do the comparison.
+    * The result returned should be one of the {@link Ranges.Comparison} constants below
     *
     * @param <T> the type of ranges that this range may be compared to (usually it's own class)
     */
@@ -25,9 +28,9 @@ public class Ranges {
    
    
    /**
-    * Similar to @link java.util.Comparator.  
-    * Implement this interface if a class separate from the range does the comparison.
-    * The result returned should be one of constants below
+    * Similar to java.util{@link java.util.Comparator}.  
+    * Implement this interface if a class <i>separate</i> from the range does the comparison.
+    * The result returned should be one of {@link Ranges.Comparison} constants below
     *
     * @param <R>  the type of ranges that may be compared by this comparator
     */
@@ -37,51 +40,50 @@ public class Ranges {
    
    
    /**
-    * The values to be returned by Ranges.Comparable or Ranges.Comparator
+    * The values to be returned by {@link Ranges.Comparable} or {@link Ranges.Comparator}
     * Arguably these should be enums, but they are kept as ints
-    * for compatability with java.util.Comparable and java.util.Comparator
+    * for compatability with {@link java.util.Comparable} and {@link java.util.Comparator}
     * Organized into an inner class for distinctness
     */
 
    public class Comparison {
       /**
-       * Range A is complete less than (or equal to) Range B max(A) <= min(B)
+       * Range A is completely less than (or equal to) Range B.  <pre>max(A) <= min(B)</pre?
        */
       public static final int STRICTLY_LT = -4;
    
       /**
-       * Range A is generally less than Range B but there is some overlap
-       * (min(A) < min(B)) && (max(A) < max(B)) && (max(A) > min(B))
+       * Range A is generally less than Range B but there is some overlap<br>
+       * <pre>(min(A) < min(B)) && (max(A) < max(B)) && (max(A) > min(B))</pre>
        */
       public static final int OVERLAPS_LT = -2;
    
       /**
-       * Range A is "inside" B (min(A) >= min(B)) && (max(A) <= max(B)) but they
-       * are not both equal
+       * Range A is "inside" B <br>
+       * <pre>(min(A) >= min(B)) && (max(A) <= max(B))</pre> but they are not both equal
        */
       public static final int CONTAINED_BY = -1;
    
       /**
-       * As for the "range" part, A.equals(B) (min(A) == min(B)) && (max(A) ==
-       * max(B))
+       * The ranges are equals.  <pre>(min(A) == min(B)) && (max(A) == max(B))</pre>
        */
       public static final int EQ = 0;
    
       /**
-       * B is "inside" A (min(A) <= min(B)) && (max(A) >= max(B)) but they are
-       * not both equal
+       * B is "inside" A<br>
+       * <pre>(min(A) <= min(B)) && (max(A) >= max(B))</pre> but they are not both equal
        */
       public static final int CONTAINS = 1;
    
       /**
-       * Range A is generally greater than Range B but there is some overlap
-       * (min(A) > min(B)) && (max(A) > max(B)) && (min(A) < max(B))
+       * Range A is generally greater than Range B but there is some overlap<br>
+       * <pre>(min(A) > min(B)) && (max(A) > max(B)) && (min(A) < max(B))</pre>
        */
       public static final int OVERLAPS_GT = 2;
    
       /**
-       * Range A is completely greater than (or equal to) Range B min(A) >=
-       * max(B)
+       * Range A is completely greater than (or equal to) Range B <br>
+       * <pre> min(A) >= max(B)</pre>
        */
       public static final int STRICTLY_GT = 4;
    
@@ -90,12 +92,17 @@ public class Ranges {
    
    
    /**
-    * Interface for accepting the comparison result, which should be a Ranges.Comparison constant
+    * Interface for accepting the comparison result, which should be a {@link Ranges.Comparison} constant
     *
     * @see <a href="http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/base/Predicate.html">Guava Predicate</a>
     *
     */
    public interface Predicate {
+      
+      /**
+       * Whether to accept the input
+       * @param input   should be a {@link Ranges.Comparison} constant
+       */
       public boolean accept(int input);
    }
    

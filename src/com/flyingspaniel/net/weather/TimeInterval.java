@@ -12,11 +12,11 @@ import java.util.Date;
 import java.util.List;
 
 import com.flyingspaniel.ranges.Ranges;
-//import com.flyingspaniel.ranges.*;
+
 
 /**
  * Represents an immutable interval of time (using longs for ms since Jan 1 1970)
- * Most methods have two forms, one taking a long (for ms), the other a non-null Date
+ * Most methods have two forms, one taking a long (and ending in "MS"), the other a non-null Date
  * 
  * 
  * @author Morgan Conrad
@@ -63,6 +63,11 @@ public class TimeInterval implements Ranges.Comparable<TimeInterval> {
       this(startAndStopMS, startAndStopMS);
    }
    
+   
+   /**
+    * Constructor for an instant in time, stop == start
+    * @param startAndStop
+    */
    public TimeInterval(Date startAndStop) {
       this(startAndStop.getTime(), startAndStop.getTime());
    }
@@ -78,8 +83,7 @@ public class TimeInterval implements Ranges.Comparable<TimeInterval> {
    
    /**
     * Whether this starts after ms 
-    * @param ms
-    * @return
+    * @param ms since 1970
     */
    public boolean after(long ms) {
       return startMS > ms;
@@ -88,7 +92,6 @@ public class TimeInterval implements Ranges.Comparable<TimeInterval> {
    /**
     * Whether this starts after the given date
     * @param date  non-null
-    * @return
     */
    public boolean after(Date date) {
       return after(date.getTime());
@@ -97,17 +100,15 @@ public class TimeInterval implements Ranges.Comparable<TimeInterval> {
    
    /**
     * Whether this stops before ms
-    * @param ms
-    * @return
+    * @param ms since 1970
     */
    public boolean before(long ms) {
       return stopMS < ms;
    }
 
    /**
-    * Whether this stops before the goven Date
+    * Whether this stops before the given Date
     * @param date  non-null
-    * @return
     */
    public boolean before(Date date) {
       return before(date.getTime());
@@ -115,8 +116,7 @@ public class TimeInterval implements Ranges.Comparable<TimeInterval> {
 
    /**
     * Whether ms is within our range
-    * @param ms
-    * @return
+    * @param ms since 1970
     */
    public boolean contains(long ms) {
       return (ms >= startMS) && (ms <= stopMS);
@@ -125,7 +125,6 @@ public class TimeInterval implements Ranges.Comparable<TimeInterval> {
    /**
     * Whether date is within our range
     * @param date  non-null
-    * @return
     */
    public boolean contains(Date date) {
      return contains(date.getTime());
@@ -171,11 +170,10 @@ public class TimeInterval implements Ranges.Comparable<TimeInterval> {
    
    
    /**
-    * Whether this interval has 0 duration
-    * @return
+    * Whether this interval has 0 duration (startMS == stopMS)
     */
    public boolean isInstant() {
-      return stopMS == startMS;
+      return startMS == stopMS;
    }
 
    
@@ -292,16 +290,14 @@ public class TimeInterval implements Ranges.Comparable<TimeInterval> {
     * Difference in hours (signed) between ms2 and ms1
     * @param ms1
     * @param ms2
-    * @return
     */
    public static float hourDiff(long ms1, long ms2) {
       return (ms2 - ms1) / HOURF;
    }
    
    /**
-    * Converts ms to hours
+    * Converts milliseconds to hours
     * @param ms
-    * @return
     */
    public static float msToHours(long ms) {
       return ms / HOURF;

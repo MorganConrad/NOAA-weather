@@ -8,9 +8,9 @@ import static com.flyingspaniel.ranges.Ranges.Comparison.*;
 
 
 /**
- * A stateless implementation of Ranges.Predicate 
- * Various static finals referring to "standard" implementations 
- * Static utility methods dealing with Ranges.Compable or Ranges.Comparator
+ * A stateless implementation of {@link Ranges.Predicate}<br>
+ * Various static finals referring to "standard" implementations<br>
+ * Static utility methods dealing with {@link Ranges.Comparable} or {@link Ranges.Comparator}
  * 
  * @author Morgan Conrad
  * @since Copyright(c) 2013 Morgan Conrad
@@ -21,17 +21,17 @@ import static com.flyingspaniel.ranges.Ranges.Comparison.*;
 public class RangesPredicates implements Ranges.Predicate {
 
    /**
-    * Contains in the broad/human-logical sense, i.e. the first range "contains or equals" the second
+    * Contains in the broad/human-logical sense: the first range "contains or equals" the second
     */
    public static final RangesPredicates Contains = new RangesPredicates(EQ, CONTAINS);
 
    /**
-    * ContainedBy in the broad/human-logical sense, i.e. the first range is "containedBy or equals" the second
+    * ContainedBy in the broad/human-logical sense: the first range is "containedBy or equals" the second
     */
    public static final RangesPredicates ContainedBy = new RangesPredicates(Ranges.Comparison.EQ, Ranges.Comparison.CONTAINED_BY);
 
    /**
-    * Overlaps in the broad/human-logical sense, i.e. contains, containedBy, overlaps in any form, or equals 
+    * Overlaps in the broad/human-logical sense: contains, containedBy, overlaps in any form, or equals 
     * Unlike all the others, this uses a special implementation for a bit of extra speed.
     */
    public static final RangesPredicates Overlaps = new RangesPredicates(0) {
@@ -71,7 +71,7 @@ public class RangesPredicates implements Ranges.Predicate {
    
    /**
     * Constructor
-    * @param accept  one or more ints from the ComparableRange constants
+    * @param accept  one or more ints from the {@link Ranges.Comparison} constants
     */
    public RangesPredicates(int... accept) {
       int tempRangePredicate2 = 0;
@@ -95,11 +95,11 @@ public class RangesPredicates implements Ranges.Predicate {
    
    
    /**
-    * Selects all items from comparableRanges such that predicate.accept(exemplar, item) is true.
+    * Selects all items from comparableRanges such that predicate.accept(exemplar, item) is true.<br>
     * If your predicate has an inverse pInv this is method equivalent to 
-    *     listAcceptsExemplar(comparableRanges, exemplar, pInv)
+    *     listAcceptsExemplar(comparableRanges, exemplar, pInv)<br>
     *     
-    * Use this version when your Collection is of Ranges.Comparable (i.e. they know how to compare themselves)
+    * Use this version when your Collection is of {@link Ranges.Comparable} (i.e. they know how to compare themselves)
     *     
     * @param exemplar            the range you want to match
     * @param comparableRanges    a Collection of possible matches (may be empty)
@@ -124,16 +124,16 @@ public class RangesPredicates implements Ranges.Predicate {
    
    
    /**
-    * Selects all items from comparableRanges such that predicate.accept(exemplar, item) is true.
+    * Selects all items from comparableRanges such that predicate.accept(exemplar, item) is true.<br>
     * If your predicate has an inverse pInv this is method equivalent to 
-    *     listAcceptsExemplar(comparableRanges, exemplar, comparator, pInv)
+    *     listAcceptsExemplar(comparableRanges, exemplar, comparator, pInv)<br>
     *     
-    * Use this version when your Collection is not of Ranges.Comparable, and you need a separate Ranges.Comparator
+    * Use this version when your Collection is not of {@link Ranges.Comparable}, and you need a separate {@link Ranges.Comparator}
     * 
     * @param exemplar            the range you want to match
     * @param ranges              a Collection of possible matches (may be empty)
     * @param comparator          the external comparator.  If null, will attempt to compare using "natural ordering"
-    *                                                      assuming the Ts ARE Ranges.Comparable - requires some unsafe casting
+    *                                                      assuming the Ts ARE {@link Ranges.Comparable} - requires some unsafe casting
     * @param predicate           how to match
     * @return ArrayList<T>       non-null, may be empty
     */
@@ -161,11 +161,11 @@ public class RangesPredicates implements Ranges.Predicate {
    
    
    /**
-    * Selects all items from comparableRanges such that predicate.accept(item, exemplar) is true.
+    * Selects all items from comparableRanges such that predicate.accept(item, exemplar) is true.<br>
     * If your predicate has an inverse pInv this is method equivalent to 
-    *     exemplarAcceptsList(exemplar, comparableRanges, pInv)
+    *     exemplarAcceptsList(exemplar, comparableRanges, pInv)<br>
     *     
-    * Use this version when your Collection is of Ranges.Comparable (i.e. they know how to compare themselves)
+    * Use this version when your Collection is of {@link Ranges.Comparable} (i.e. they know how to compare themselves)
     *     
     * @param comparableRanges    a Collection of possible matches (may be empty) 
     * @param exemplar            the range you want to match
@@ -189,16 +189,16 @@ public class RangesPredicates implements Ranges.Predicate {
    
    
    /**
-    * Selects all items from comparableRanges such that predicate.accept(exemplar, item) is true.
+    * Selects all items from comparableRanges such that predicate.accept(exemplar, item) is true.<br>
     * If your predicate has an inverse pInv this is method equivalent to 
-    *     listAcceptsExemplar(comparableRanges, exemplar, comparator, pInv)
+    *     listAcceptsExemplar(comparableRanges, exemplar, comparator, pInv)<br>
     *     
-    * Use this version when your Collection is not of Ranges.Comparable, and you need a separate Ranges.Comparator
+    * Use this version when your Collection is not of {@link Ranges.Comparable}, and you need a separate {@link Ranges.Comparator}
     * 
     * @param ranges              a Collection of possible matches (may be empty)
     * @param exemplar            the range you want to match
     * @param comparator          the external comparator.  If null, will attempt to compare using "natural ordering"
-    *                                                      assuming the Ts ARE Ranges.Comparable - requires some unsafe casting
+    *                                                      assuming the Ts ARE {@link Ranges.Comparable} - requires some unsafe casting
     * @param predicate           how to match
     * @return ArrayList<T>       non-null, may be empty
     */
@@ -226,12 +226,12 @@ public class RangesPredicates implements Ranges.Predicate {
    
    
    /**
-    * Selects the indices of items from comparableRanges such that predicate.accept(exemplar, item) is true
+    * Selects the <i>indices</i> of items from comparableRanges such that predicate.accept(exemplar, item) is true
     * 
     * @param comparableRanges    a Collection of possible matches (may be empty)
     * @param exemplar            the range you want to match
     * @param predicate           how to match
-    * @return int[]              non-null but may be 0 length
+    * @return int[]              indices, non-null but may be 0 length
     */
    public static <T extends Ranges.Comparable<T>> int[] exemplarAcceptsIndices(T exemplar, List<T> comparableRanges, Ranges.Predicate predicate) {
       int[] array1 = new int[comparableRanges.size()];
@@ -247,9 +247,7 @@ public class RangesPredicates implements Ranges.Predicate {
       // some versions of Android don't have Arrays.copy
 
       int[] result = new int[idx];
-      for (int i = 0; i < idx; i++)
-         result[i] = array1[i];
-
+      System.arraycopy(array1, 0, result, 0, result.length);
       return result;
    }
    
@@ -274,7 +272,7 @@ public class RangesPredicates implements Ranges.Predicate {
    /**
     * Selects all items from comparableRanges such that this.accept(item, exemplar) is true.
     * 
-    * @param comparableRanges   the range you want to match
+    * @param comparableRanges   a Collection of possible matches (may be empty)
     * @param exemplar           the range you want to match
     * 
     * @return ArrayList<T>      non-null, may be empty

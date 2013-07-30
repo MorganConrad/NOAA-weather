@@ -13,16 +13,16 @@ Getting and parsing the data
 ----------------------------
 
 1. Create a NOAAWeather
-		<NOAAWeather weather = new NOAAWeather()>
+		NOAAWeather weather = new NOAAWeather();
 2. Set the dates of interest using one form of setDates
-		<weather.setDates(new Date(), 10);      // next 10 days>
+		weather.setDates(new Date(), 10);      // next 10 days
 3. Set the location
-		<weather.setLocation(39.096, -94.595);  // Kansas City here I come >
+		weather.setLocation(39.096, -94.595);  // Kansas City here I come
 4. By default, this will obtain data for min and maximum temperature, temperature, and general conditions.
    If you want more, e.g. wind direction and wind gusts, call addNDFDParameters.
-		<weather.addNDFDParameters("wdir", "wgust");
+		weather.addNDFDParameters("wdir", "wgust");
 5. You are ready to call().  This may take a few seconds so you might want to use an Executor etc.
-		<weather.call();>
+		weather.call();
 
 Using the results
 -----------------

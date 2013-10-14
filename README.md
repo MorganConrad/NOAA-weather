@@ -24,6 +24,7 @@ Getting and parsing the data
 5. You are ready to call().  This may take a few seconds so you might want to use an Executor etc.
 		weather.call();
 
+
 Using the results
 -----------------
 
@@ -33,7 +34,18 @@ Using the results
 		<NDFDSeries allMaxTs = weather.getNDFDSeries(NDFD.maxt);>
 3. More to come...
 		
-		
+
+Example Code
+----------
+
+    NOAAWeather weather = new NOAAWeather();
+    weather.setDates(new Date(), 10);      // next 10 days
+    weather.setLocation(39.096, -94.595);  // Kansas City here I come, YMMV
+    weather.addNDFDParameters("wdir", "wgust");
+    weather.call();
+     ... more needed on what to do here ...
+
+
 Developed By
 ============
 

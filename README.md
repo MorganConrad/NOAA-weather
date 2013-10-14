@@ -7,7 +7,7 @@ specifically, the [NOAA REST API](http://graphical.weather.gov/xml/rest.php)
 Usage
 =====
 
-[JavaDocs are here](http://morganconrad.github.com/NOAA-weather/blob/gh-pages/index-all.html)
+[JavaDocs are here](http://morganconrad.github.com/NOAA-weather/gh-pages/index-all.html)
 
 Getting and parsing the data
 ----------------------------

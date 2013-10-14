@@ -29,9 +29,9 @@ Using the results
 -----------------
 
 1. There is some "metadata" in a Map<String, String>.  Current keys are enumerated in <NOAAWeather.MoreInfoKeys>
-		<String theirURL = weather.getMoreInfo().get(NOAAWeather.MoreInfoKeys.OUT_URL.name());>
+		String theirURL = weather.getMoreInfo().get(NOAAWeather.MoreInfoKeys.OUT_URL.name());
 2. You can obtain all data for the time period, for a certain measurement, as an NDFDSeries
-		<NDFDSeries allMaxTs = weather.getNDFDSeries(NDFD.maxt);>
+		NDFDSeries allMaxTs = weather.getNDFDSeries(NDFD.maxt);
 3. More to come...
 		
 
@@ -44,6 +44,8 @@ Example Code
     weather.addNDFDParameters("wdir", "wgust");
     weather.call();
      ... more needed on what to do here ...
+    String theURL = weather.getMoreInfo().get(NOAAWeather.MoreInfoKeys.OUT_URL.name());
+    NDFDSeries allMaxTs = weather.getNDFDSeries(NDFD.maxt);
 
 
 Developed By

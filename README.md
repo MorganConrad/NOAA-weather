@@ -7,7 +7,7 @@ specifically, the [NOAA REST API](http://graphical.weather.gov/xml/rest.php)
 Usage
 =====
 
-[JavaDocs are here](http://morganconrad.github.com/NOAA-weather/javadoc/)
+[JavaDocs are here](http://morganconrad.github.io/NOAA-weather/)
 
 Getting and parsing the data
 ----------------------------
@@ -24,16 +24,30 @@ Getting and parsing the data
 5. You are ready to call().  This may take a few seconds so you might want to use an Executor etc.
 		weather.call();
 
+
 Using the results
 -----------------
 
 1. There is some "metadata" in a Map<String, String>.  Current keys are enumerated in <NOAAWeather.MoreInfoKeys>
-		<String theirURL = weather.getMoreInfo().get(NOAAWeather.MoreInfoKeys.OUT_URL.name());>
+		String theirURL = weather.getMoreInfo().get(NOAAWeather.MoreInfoKeys.OUT_URL.name());
 2. You can obtain all data for the time period, for a certain measurement, as an NDFDSeries
-		<NDFDSeries allMaxTs = weather.getNDFDSeries(NDFD.maxt);>
+		NDFDSeries allMaxTs = weather.getNDFDSeries(NDFD.maxt);
 3. More to come...
 		
-		
+
+Example Code
+----------
+
+    NOAAWeather weather = new NOAAWeather();
+    weather.setDates(new Date(), 10);      // next 10 days
+    weather.setLocation(39.096, -94.595);  // Kansas City here I come, YMMV
+    weather.addNDFDParameters("wdir", "wgust");
+    weather.call();
+     ... more needed on what to do here ...
+    String theURL = weather.getMoreInfo().get(NOAAWeather.MoreInfoKeys.OUT_URL.name());
+    NDFDSeries allMaxTs = weather.getNDFDSeries(NDFD.maxt);
+
+
 Developed By
 ============
 

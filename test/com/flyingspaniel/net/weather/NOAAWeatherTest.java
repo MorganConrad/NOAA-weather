@@ -38,11 +38,7 @@ public class NOAAWeatherTest extends TestCase {
       Forecast currentConditions = weather.getConditionAtTime(now);
       //assertTrue(currentConditions.toString().startsWith(now.toString()));
       assertNotNull(currentConditions);
-      assertTrue(weather.getMoreInfo().get(NOAAWeather.MoreInfoKeys.OUT_URL.name()).startsWith("http://forecast.weather.gov"));
-      
-      
-      boolean b = true & false;
-      
+      assertTrue(weather.getMoreInfo().get(NOAAWeather.MoreInfoKeys.OUT_URL.name()).startsWith("http://forecast.weather.gov"));      
    }
    
    

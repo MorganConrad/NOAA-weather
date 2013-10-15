@@ -3,9 +3,11 @@ package com.flyingspaniel.xml;
 import java.io.File;
 import java.io.IOException;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
@@ -20,15 +22,14 @@ import org.xml.sax.SAXException;
 /**
  * Base class for classes that use XPath to navigate a DOM
  * 
- * Contains useful utilities for XPath navigation, plus utilities for loading DOMs.<P> 
+ * <p>Contains useful utilities for XPath navigation, plus utilities for loading DOMs.
  * 
- * The base class, UsesXPath, shares a single static DocumentBuilderFactory and XPathFactory
- * for all instances.  Since neither DocumentBuilderFactory nor XPathFactory are thread safe,
- * their calls, {@link #loadDOM(File)}, {@link #loadDOM(String)} and {@link #compile(String)}, 
- * are explicitly synchronized.<p>
+ * <p>The base class, UsesXPath, shares a single static DocumentBuilderFactory and XPathFactory for all instances.
+ * <br>Since neither DocumentBuilderFactory nor XPathFactory are thread safe, their calls, 
+ * <br>{@link #loadDOM(File)}, {@link #loadDOM(String)} and {@link #compile(String)}, are explicitly synchronized.
  * 
- * If you are using this class on a high-load application, use {@link UsesXPath.HighLoad} instead,
- * because in that class each instance has it's own factory.
+ * <p>If you are using this class on a high-load application, use {@link UsesXPath.HighLoad} instead,
+ * where each instance has it's own factory.
  * 
  * @author Morgan Conrad
  * @since Copyright(c) 2013  Morgan Conrad
@@ -37,6 +38,8 @@ import org.xml.sax.SAXException;
  */
 public class UsesXPath {
 
+   protected volatile NamespaceContext namespaceContext = null;
+   
    /**
     * Initialization On Demand Holder idiom, see Josh Bloch Effective Java 2nd ed. page 283 or
     * @see <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/jsr-133-faq.html#dcl>More info</a>
@@ -45,6 +48,10 @@ public class UsesXPath {
    static class SingletonFactoryHolder {
       protected static final DocumentBuilderFactory sDocumentBuilderFactory = DocumentBuilderFactory.newInstance();
       protected static final XPathFactory sXPathfactory = XPathFactory.newInstance();
+      
+      static {
+         sDocumentBuilderFactory.setNamespaceAware(true);
+      }
    }
    
    
@@ -64,19 +71,50 @@ public class UsesXPath {
       return SingletonInstanceHolder.instance;
    }
    
+   
+   
    /**
-    * Compile the String to an XPathExpression
+    * Set a default NamespaceContext for all calls to compile
+    * @param newNamespaceContext may be null to mean "none"
+    * @return previous value
+    */
+   public NamespaceContext setNamespaceContext(NamespaceContext newNamespaceContext) {
+      NamespaceContext was = namespaceContext;
+      namespaceContext = newNamespaceContext;
+      return was;
+   }
+   
+   
+   /**
+    * Compile the String to an XPathExpression with an optional NamespaceContext
     * This (default) implementation uses synchronized access to a single static instance
     * 
-    * @see HighLoad   for alternative implementation, one factory per instance
-    * @param xpath
+    * @param  xpathString
+    * @param  nsContext if non-null overrides any namespaceContext set in @link {@link #setNamespaceContext}
     * @return XPathExpression
     * @throws XPathExpressionException
     */
-   public XPathExpression compile(String xpath) throws XPathExpressionException {
+   public XPathExpression compile(String xpathString, NamespaceContext nsContext) throws XPathExpressionException {
       synchronized(SingletonFactoryHolder.sXPathfactory) {
-         return SingletonFactoryHolder.sXPathfactory.newXPath().compile(xpath);
+         XPath xpath = SingletonFactoryHolder.sXPathfactory.newXPath();
+         if (nsContext != null)
+            xpath.setNamespaceContext(nsContext);
+         else if (namespaceContext != null)
+            xpath.setNamespaceContext(namespaceContext);
+         return xpath.compile(xpathString);
       }
+   }
+   
+   
+   /**
+    * Compile the String to an XPathExpression.  
+    * Will use any NamespaceContext set in @link {@link #setNamespaceContext}
+    * @param xpathString
+    * @return XPathExpression
+    * @throws XPathExpressionException
+    */
+   public XPathExpression compile(String xpathString) throws XPathExpressionException {
+      return compile(xpathString, null);
    }
    
    
@@ -209,10 +247,21 @@ public class UsesXPath {
       protected final DocumentBuilderFactory localDocumentBuilderFactory = DocumentBuilderFactory.newInstance();
       
       @Override
-      public XPathExpression compile(String xpath) throws XPathExpressionException {
-         return localPathFactory.newXPath().compile(xpath);
+      public XPathExpression compile(String xpathString, NamespaceContext nsContext) throws XPathExpressionException {
+         XPath xpath = localPathFactory.newXPath();
+         if (nsContext != null)
+            xpath.setNamespaceContext(nsContext);
+         else if (namespaceContext != null)
+            xpath.setNamespaceContext(namespaceContext);
+         return xpath.compile(xpathString);
       }
-       
+      
+      @Override
+      public XPathExpression compile(String xpathString) throws XPathExpressionException {
+         return compile(xpathString, null);
+      }
+      
+      
       @Override
       public DocumentBuilderFactory getDocumentBuilderFactory() {
          return localDocumentBuilderFactory;

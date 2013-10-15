@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="protected" author="true" classpath="D:\programs\EclipseJuno\plugins\org.junit_3.8.2.v3_8_2_v20100427-1100\junit.jar" destdir="C:\gitL\gh-pages\NOAA-weather" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="com.flyingspaniel.xml" source="1.6" sourcefiles="src/com/flyingspaniel/net/weather/NDFD.java,src/com/flyingspaniel/net/weather/TimeInterval.java,src/com/flyingspaniel/ranges/RangesPredicates.java,src/com/flyingspaniel/ranges/Ranges.java,src/com/flyingspaniel/net/weather/Forecast.java,src/com/flyingspaniel/net/weather/NOAAWeather.java,src/com/flyingspaniel/net/weather/Condition.java,src/com/flyingspaniel/net/weather/TimeLayout.java,src/com/flyingspaniel/net/weather/Weather.java,src/com/flyingspaniel/net/weather/NDFDSeries.java" sourcepath="test;src" splitindex="false" use="true" version="true">
+            <link href="http://download.oracle.com/javase/7/docs/api/"/>
+        </javadoc>
+    </target>
+</project>
